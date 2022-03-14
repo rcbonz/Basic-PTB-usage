@@ -43,16 +43,17 @@ import telegram
 
 top_parser = argparse.ArgumentParser(description='Telegram functions')
 top_parser.add_argument('-m', '--message', action="store", dest="message", required=True, help="Message to be sent.")
-top_parser.add_argument('-p', '--photo', action="store", dest="photo", type=str, help="Photo to be sent, local file or url.")
+top_parser.add_argument('-p', '--photo', action="store", dest="photo", type=str, help="Local file or url to photo to be sent. When used with -m the message will be sent as caption.")
 top_parser.add_argument('-c', '--chat-id', action="store", dest="chat_id", type=str, help="Chat ID to deliver the message.")
 top_parser.add_argument('-t', '--token', action="store", dest="token", type=str, help="Telegram bot token.")
+top_parser.add_argument('-v', '--verbose', action="store_true", dest="verbose", help="Adds verbosity.")
 args = top_parser.parse_args()
 
 message = args.message
 photo = args.photo
 chat_id = args.chat_id
 token = args.token
-
+verbose = args.verbose
 
 def sendTelegMes(message, token, chat_id):
     sent = False
@@ -85,7 +86,11 @@ def sendTelegMes(message, token, chat_id):
                 print('Unexpected error: '+str(err)+'\nMessage not sent.')
                 break
         else:
-            print("Telegram message successfully sent.")
+            if sent["chat"]["type"] == "private" and verbose == True:
+                print("Telegram message successfully sent.")
+                print("Verbosity on\nMessage delivery information:\n  text: "+str(sent["text"])+"\n  date: "+str(sent["date"])+"\n  message_id: "+str(sent["message_id"])+"\n  username: "+str(sent["chat"]["username"])+"\n  first_name: "+str(sent["chat"]["first_name"])+"\n  id: "+str(sent["chat"]["id"]))
+            else:
+                print("Telegram message successfully sent.")
     return sent
 
 def sendTelegPho(photo, message, token, chat_id):
@@ -120,7 +125,11 @@ def sendTelegPho(photo, message, token, chat_id):
                 print('Unexpected error: '+str(err)+'\nMessage not sent.')
                 break
         else:
-            print("Telegram message successfully sent.")
+            if sent["chat"]["type"] == "private" and verbose == True:
+                print("Telegram message successfully sent.")
+                print("Verbosity on\nMessage delivery information:\n  text: "+str(sent["text"])+"\n  date: "+str(sent["date"])+"\n  message_id: "+str(sent["message_id"])+"\n  username: "+str(sent["chat"]["username"])+"\n  first_name: "+str(sent["chat"]["first_name"])+"\n  id: "+str(sent["chat"]["id"]))
+            else:
+                print("Telegram message successfully sent.")
     return sent
 
 if photo != None:
